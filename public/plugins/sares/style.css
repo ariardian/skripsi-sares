@@ -1,0 +1,82 @@
+:root {
+  --icomoon-font-family: "koperasi";
+  --icomoon-font-path: "fonts/koperasi";
+  --view: "\e91d";
+  --filter: "\ea05";
+  --print: "\ea0f";
+  --more: "\ea11";
+  --delete: "\e900";
+  --eye: "\e901";
+  --edit: "\e902";
+  --arrow-left: "\e903";
+  --printer: "\e904";
+  --plus-1: "\e905";
+  --download: "\e906";
+  --download2: "\e9c5";
+}
+
+@font-face {
+  font-family: 'koperasi';
+  /* src:  url('fonts/koperasi.eot?aohosn'); */
+  /* src:  url('fonts/koperasi.eot?aohosn#iefix') format('embedded-opentype'), */
+  src:  url('fonts/koperasi.ttf?aohosn') format('truetype'),
+    url('fonts/koperasi.woff?aohosn') format('woff'),
+    url('fonts/koperasi.svg?aohosn#koperasi') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.icon:before {
+  /* use !important to prevent issues with browser extensions that change fonts */
+   display: inline-block;
+   font-family: "koperasi" !important;
+   font-size: inherit;
+   font-style: normal;
+   font-weight: normal;
+   font-variant: normal;
+   text-transform: none;
+   line-height: 1;
+   speak: none;
+   text-rendering: auto;
+  /* Better Font Rendering =========== */
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+ }
+
+.icon-plus:before {
+  content: "\ea0a";
+}
+.icon-pencil:before {
+  content: "\e906";
+}
+.icon-printer:before {
+  content: "\e954";
+}
+.icon-delete:before {
+  content: "\e9ac";
+}
+.icon-download:before {
+  content: "\e9c7";
+}
+.icon-view:before {
+  content: "\e9ce";
+}
+.icon-import:before {
+  content: "\e900";
+}
+.icon-approve:before {
+  content: "\e901";
+}
+.icon-reject:before {
+  content: "\e902";
+}
+.icon-edit:before {
+  content: "\e903";
+}
+.icon-recruitment:before {
+  content: "\e904";
+}
+.icon-viewdoc:before {
+  content: "\e91d";
+}

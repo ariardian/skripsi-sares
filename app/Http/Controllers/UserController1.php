@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\UsersImport;
+use App\Exports\UsersExport;
+
+class UserController extends Controller
+{
+    /**
+    * @return \Illuminate\Support\Collection
+    */
+    public function fileImportExport()
+    {
+       return view('file-import');
+    }
+   
+    /**
+    * @return \Illuminate\Support\Collection
+    */
+    public function fileImport(Request $request) 
+    {
+        // dump($request);
+        $array = Excel::toArray(new UsersImport, $request->file('file')->store('temp'));
+        $collection = Excel::toCollection(new UsersImport, $request->file('file')->store('temp'));
+        return back()->withStatus('Import in queue, we will send notification after import finished.');
+        dump($collection);
+
+        // Excel::import(new UsersImport, $request->file('file')->store('temp'));
+        // return back();
+    }
+
+    /**
+    * @return \Illuminate\Support\Collection
+    */
+    public function fileExport() 
+    {
+        return Excel::download(new UsersExport, 'users-collection.xlsx');
+    }    
+}

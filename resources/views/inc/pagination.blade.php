@@ -1,0 +1,1 @@
+{{ $result->onEachSide(5)->links('vendor.pagination.paging-sares') }}
