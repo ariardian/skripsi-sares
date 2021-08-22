@@ -3,6 +3,13 @@ body {
 /* .header-page {
     
 } */
+.vertical-line-pill .nav-pills .nav-link.active, .vertical-line-pill #v-line-pills-tabContent h4 {
+    color: #00a1af !important;
+    font-weight: bold !important;
+}
+.vertical-line-pill .nav-pills .nav-link:before {
+    background-color: #00a1af !important;
+}
 .sticky-banner{
     position: sticky !important;
     z-index: 2!important;

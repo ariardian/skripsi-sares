@@ -30,6 +30,13 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
     @break
 
+    @case('input-tata-letak')
+        {{-- Components Tabs --}}
+        <link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/components/tabs-accordian/custom-tabs.css') }}" rel="stylesheet"
+            type="text/css" />
+    @break
+
     @case('sales')
         {{-- Dashboard 2 --}}
         <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
@@ -711,8 +718,8 @@
         {{-- Starter Kit ALt menu --}}
         <style>
             /*
-                    Just for demo purpose ---- Remove it.
-                */
+                        Just for demo purpose ---- Remove it.
+                    */
             /*<starter kit design>*/
 
             .widget-one {}
@@ -738,8 +745,8 @@
         {{-- Starter Kit Boxed menu --}}
         <style>
             /*
-                    The below code is for DEMO purpose --- Use it if you are using this demo otherwise Remove it
-                */
+                        The below code is for DEMO purpose --- Use it if you are using this demo otherwise Remove it
+                    */
 
             body {
                 max-width: 1140px;
@@ -760,10 +767,10 @@
             }
 
             /*
-                    ====================
-                        IE Support
-                    ====================
-                */
+                        ====================
+                            IE Support
+                        ====================
+                    */
 
             @media all and (-ms-high-contrast: none),
             (-ms-high-contrast: active) {
@@ -773,8 +780,8 @@
             }
 
             /*
-                    Just for demo purpose ---- Remove it.
-                */
+                        Just for demo purpose ---- Remove it.
+                    */
             /*<starter kit design>*/
 
             .widget-one {}
@@ -798,8 +805,8 @@
         {{-- Starter Kit Breadcrumb --}}
         <style>
             /*
-                    The below code is for DEMO purpose --- Use it if you are using this demo otherwise Remove it
-                */
+                        The below code is for DEMO purpose --- Use it if you are using this demo otherwise Remove it
+                    */
             .page-title {
                 float: none;
                 margin-top: 0;
@@ -887,8 +894,8 @@
 
 
             /*
-                    Just for demo purpose ---- Remove it.
-                */
+                        Just for demo purpose ---- Remove it.
+                    */
             /*<starter kit design>*/
 
             .widget-one {}
