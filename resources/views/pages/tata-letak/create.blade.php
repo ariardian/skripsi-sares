@@ -151,20 +151,59 @@
             // buat pasangan item menjadi kombinasi 2 item
             function setFrequent3(data) {
                 let result = []
-                // let tmp = data.map(res => res.item)
-                // let combine = tmp.map((res, key) => {
-                //     let comb = data.map((v, i) => {
-                //         if (i <= key) {
-                //             return null
-                //         }
-                //         return res + "-" + v.item
-                //     }).filter(v => v !== null)
-                //     return comb
-                //     console.log("kombinasi =", comb)
-                // })
-                // if (combine.length) {
-                //     result = combine.reduce((acc, cur) => [...acc, ...cur])
-                // }
+                let tmp = data.map(res => res.pasanganItem)
+
+                let combine = tmp.map((res, key) => {
+                    let comb = data.map((v, i) => {
+                        if (i <= key) {
+                            return null
+                        }
+                        let vToArray = v.pasanganItem.split("-");
+                        let resToArray = res.split("-")
+                        let valueNew = [...resToArray]
+                        resToArray.forEach(item => {
+                            if(vToArray.includes(item)){
+                                valueNew = [...new Set([...resToArray, ...vToArray])]
+                            }
+                        })
+                        if(valueNew && valueNew.length < 3){
+                            return null
+                        }
+                        return valueNew.join("-")
+                    }).filter(v => v !== null)
+                    return comb
+                })
+                if (combine.length) {
+                    result = combine.reduce((acc, cur) => [...acc, ...cur])
+                }
+                console.log("data 3 = ", combine)
+                return result;
+            }
+
+            // hitung banyaknya transaksi 3 pasang item
+            function setCountFrequent3(data, dataTransaksi) {
+                let result = [];
+                let listItem = [...dataTransaksi]
+                let tempListItem = [...data]
+                let listItemUnique = [...new Set(tempListItem)];
+                const setCount = (val) => {
+                    let isFind = [false, false, false];
+                    let isCount = 0;
+                    let valToArray = val.split("-")
+                    listItem.forEach(res => {
+                        valToArray.forEach((v, i) => isFind[i] = res.item.includes(v))
+                        isCount = Number(isCount) + (!isFind.includes(false) ? 1 : 0)
+                    })
+                    console.log("COUNT Freq 3= ", isCount)
+                    return isCount
+                }
+                data.map(value => {
+                    result.push({
+                        pasanganItem: value,
+                        count: setCount(value)
+                    })
+                })
+                console.log("result coumnt frequent ", result)
                 return result;
             }
 
@@ -178,6 +217,7 @@
                 let countFrequent2 = setCountFrequent2(dataFrequent2, dataTransaksi);
                 let filterDataFrequent2 = filterDataTransaksi(countFrequent2);
                 let dataFrequent3 = setFrequent3(filterDataFrequent2);
+                let countFrequent3 = setCountFrequent3(dataFrequent3, dataTransaksi);
                 let dataStep = {
                     dataTransaksi,
                     dataTransaksiPerItem,
@@ -185,7 +225,8 @@
                     dataFrequent2,
                     countFrequent2,
                     filterDataFrequent2,
-                    dataFrequent3
+                    dataFrequent3,
+                    countFrequent3
                 }
                 console.log("dataTransaksi", dataStep)
             })
