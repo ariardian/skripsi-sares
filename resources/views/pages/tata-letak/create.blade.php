@@ -90,9 +90,10 @@
                 }
                 let valueNum = $("#support")?.[0]?.value;
                 let getMinimumSupport = isNumber(valueNum) ? Number(valueNum) : 0;
-                let totalCount = data && data.length && data.reduce((acc, cur) => ({
-                    count: acc.count + cur.count
-                }))?.count
+                // let totalCount = data && data.length && data.reduce((acc, cur) => ({
+                //     count: acc.count + cur.count
+                // }))?.count
+                let totalCount = data && data.length
                 if (data && data.length) {
                     result = data.filter(val => isMoreThan(val.count, getMinimumSupport,
                         totalCount))
@@ -162,11 +163,11 @@
                         let resToArray = res.split("-")
                         let valueNew = [...resToArray]
                         resToArray.forEach(item => {
-                            if(vToArray.includes(item)){
+                            if (vToArray.includes(item)) {
                                 valueNew = [...new Set([...resToArray, ...vToArray])]
                             }
                         })
-                        if(valueNew && valueNew.length < 3){
+                        if (valueNew && valueNew.length < 3) {
                             return null
                         }
                         return valueNew.join("-")
@@ -174,7 +175,60 @@
                     return comb
                 })
                 if (combine.length) {
-                    result = combine.reduce((acc, cur) => [...acc, ...cur])
+                    let tempResult = combine.reduce((acc, cur) => [...acc, ...cur])
+                    // console.log("tempResult", tempResult)
+                    // let isFilter = [];
+                    // let filterdata = [...tempResult].map((res, key) => {
+                    //     const isSame = (data, data2) => {
+                    //         return data.sort().join(",") === data2.sort().join(",")
+                    //     }
+                    //     let resToArray = res.split("-")
+                    //     let filterSame = [...tempResult].map((arr, index) => {
+                    //         if (index <= key) return null;
+                    //         let arrToArray = arr.split("-")
+                    //         console.log("filter Same = ", index, resToArray, arrToArray)
+                    //         if (isSame(resToArray, arrToArray)) {
+                    //             isFilter.push(arrToArray)
+                    //             return arrToArray.join("-")
+                    //         }
+                    //         return null
+                    //     }).filter(v => v !== null)
+                    //     return filterSame;
+                    // })
+                    // // isFilter = isFilter.reduce((acc, cur) => [...acc, ...cur])
+                    // result = tempResult.filter(res => {
+                    //     const isSame = (data, data2) => {
+                    //         return data.sort().join(",") === data2.sort().join(",")
+                    //     }
+                    //     let resToArray = res.split(",")
+                    //     isFilter.forEach(val => {
+                    //         if (isSame(resToArray, val)) {
+                    //             isFilter.push(arrToArray)
+                    //             return arrToArray.join("-")
+                    //         }
+                    //     })
+                    // })
+                    // console.log("FILTER ?? ", filterdata, tempResult, isFilter)
+
+                    // let filterdata = tempResult.map((res, key) => {
+                    //     const isSame = (data, data2) => {
+                    //         return data.sort().join(",") === data2.sort().join(",")
+                    //     }
+                    //     // let isSame = [false, false, false];
+                    //     let resToArray = res.split("-")
+                    //     let NewVal = [...res]
+                    //     let filterSame = [...resToArray].map((arr, index) => {
+                    //         if (index <= key) return null;
+                    //         console.log("filter Same = ",arr)
+                    //         if (isSame(resToArray, arr)) {
+                    //             return arr.join("-")
+                    //         }
+                    //     }).filter(v => v !== null)
+                    //     console.log("filter Same = ",filterSame)
+                    //     return filterSame
+                    // }).filter(v => v !== null)
+                    // console.log("filter Data = ",filterdata)
+                    // let newFilter = tempResult.filter(res => res)
                 }
                 console.log("data 3 = ", combine)
                 return result;
@@ -218,6 +272,7 @@
                 let filterDataFrequent2 = filterDataTransaksi(countFrequent2);
                 let dataFrequent3 = setFrequent3(filterDataFrequent2);
                 let countFrequent3 = setCountFrequent3(dataFrequent3, dataTransaksi);
+                let filterDataFrequent3 = filterDataTransaksi(dataFrequent3);
                 let dataStep = {
                     dataTransaksi,
                     dataTransaksiPerItem,
@@ -226,7 +281,8 @@
                     countFrequent2,
                     filterDataFrequent2,
                     dataFrequent3,
-                    countFrequent3
+                    countFrequent3,
+                    filterDataFrequent3
                 }
                 console.log("dataTransaksi", dataStep)
             })
