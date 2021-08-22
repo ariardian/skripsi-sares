@@ -33,9 +33,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // FILE ENTRY
     Route::resource('file-entry', TransactionController::class);
-    Route::get('file-import-export', [UserController::class, 'fileImportExport']);
     Route::post('file-import', [TransactionController::class, 'fileImport'])->name('file-import');
-    Route::get('file-export', [UserController::class, 'fileExport'])->name('file-export');
+    Route::get('file-export', [TransactionController::class, 'fileExport'])->name('file-export');
 
     // TATA LETAK
     Route::resource('tata-letak', TataLetakController::class);
