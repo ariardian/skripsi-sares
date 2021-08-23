@@ -34,18 +34,6 @@
                                         <div class="nav flex-column nav-pills mb-sm-0 mb-3 text-center mx-auto"
                                             id="v-line-pills-tab" role="tablist" aria-orientation="vertical"
                                             style="width: unset !important">
-                                            {{-- <a class="nav-link active mb-3" id="v-line-pills-home-tab" data-toggle="pill"
-                                                href="#v-line-pills-home" role="tab" aria-controls="v-line-pills-home"
-                                                aria-selected="true">Home</a>
-                                            <a class="nav-link mb-3  text-center" id="v-line-pills-profile-tab"
-                                                data-toggle="pill" href="#v-line-pills-profile" role="tab"
-                                                aria-controls="v-line-pills-profile" aria-selected="false">Profile</a>
-                                            <a class="nav-link mb-3  text-center" id="v-line-pills-messages-tab"
-                                                data-toggle="pill" href="#v-line-pills-messages" role="tab"
-                                                aria-controls="v-line-pills-messages" aria-selected="false">Messages</a>
-                                            <a class="nav-link  text-center" id="v-line-pills-settings-tab"
-                                                data-toggle="pill" href="#v-line-pills-settings" role="tab"
-                                                aria-controls="v-line-pills-settings" aria-selected="false">Settings</a> --}}
                                         </div>
                                     </div>
 
@@ -105,7 +93,7 @@
                         })
                     })
                 }
-                console.log(result)
+                // console.log(result)
                 return result;
             }
 
@@ -146,7 +134,7 @@
                         return res + "-" + v.item
                     }).filter(v => v !== null)
                     return comb
-                    console.log("kombinasi =", comb)
+                    // console.log("kombinasi =", comb)
                 })
                 if (combine.length) {
                     result = combine.reduce((acc, cur) => [...acc, ...cur])
@@ -177,7 +165,7 @@
                         count: setCount(value)
                     })
                 })
-                console.log("result coumnt frequent ", result)
+                // console.log("result coumnt frequent ", result)
                 return result;
             }
 
@@ -255,6 +243,100 @@
                 return result;
             }
 
+            // set data rule association
+            function setRule(data, dataTransaksi) {
+                let result = [];
+                let itemCombination = [];
+                let tmp = data.map(res => res.pasanganItem)
+                // console.log("TMP =", tmp)
+                let combine = tmp.map((res, key) => {
+                    let resultComb = []
+                    let dataForSet = res?.split("-")
+                    let comb = [...dataForSet].map((v, i) => {
+                        let combItem = [...dataForSet].map((val, id) => {
+                            if (id <= i) {
+                                return null
+                            }
+                            return v + "-" + val
+                        }).filter(val => val !== null)
+                        // console.log("combItem", combItem)
+                        return combItem
+                    }).filter(v => v !== null)
+                    // console.log("comb", comb)
+                    return comb
+                })
+                if (combine.length) {
+                    itemCombination = combine.map(res => res.reduce((acc, cur) => [...acc, ...cur])).reduce((acc,
+                        cur) => [...acc, ...cur])
+                    itemCombination = [...new Set(itemCombination)]
+                    let reverseItemCombination = [...itemCombination].map(res => res.split("-").reverse().join("-"))
+                    itemCombination = [...itemCombination, ...reverseItemCombination]
+                }
+                // console.log("combine", combine, itemCombination)
+
+                result = itemCombination.map((res, i) => {
+                    return {
+                        item: res,
+                        support: getSupport(res, dataTransaksi),
+                        confidence: getConfidence(res, dataTransaksi)
+                    }
+                })
+                return result;
+            }
+            function getSupport(data, dataTransaksi){
+                let listItem = [...dataTransaksi];
+                let totalTransaksi = dataTransaksi?.length;
+                let valToArray = data.split("-")
+                let num1 = (valToArray?.[0] || 0);
+                let num2 = (valToArray?.[1] || 0);
+                const setCount = (val) => {
+                    let isFind = [false, false];
+                    let isCount = 0;
+                    listItem.forEach(res => {
+                        res.item.forEach((v, i) => {
+                            // isFind[i] = res.item.includes(v)
+                            // console.log("COMPARE = ",v, val)
+                            isCount = Number(isCount) + ((v == val) ? 1 : 0)
+                        })
+                    })
+                    return Number(isCount)
+                }
+                // console.log(num1, data)
+                let dataCalc = (setCount(num1) / totalTransaksi) * 100;
+                return dataCalc
+            }
+            function getConfidence(data, dataTransaksi){
+                let listItem = [...dataTransaksi];
+                // let totalTransaksi = dataTransaksi?.length;
+                let splitVar = data.split("-")
+                let num1 = (splitVar?.[0] || 0);
+                let num2 = (splitVar?.[1] || 0);
+                
+                const setCountCombination = (val) => {
+                    let isFind = [false, false];
+                    let isCount = 0;
+                    let valToArray = val.split("-")
+                    listItem.forEach(res => {
+                        valToArray.forEach((v, i) => isFind[i] = res.item.includes(v))
+                        isCount = Number(isCount) + (!isFind.includes(false) ? 1 : 0)
+                    })
+                    return isCount
+                }
+                const setCount = (val) => {
+                    let isFind = [false, false];
+                    let isCount = 0;
+                    listItem.forEach(res => {
+                        res.item.forEach((v, i) => {
+                            isCount = Number(isCount) + ((v == val) ? 1 : 0)
+                        })
+                    })
+                    return Number(isCount)
+                }
+                // console.log(data, num1, num2)
+                let dataCalc = (setCountCombination(data) / setCount(num1)) * 100;
+                return dataCalc
+            }
+
             $(document).on('click', '#buttonProc', function(event) {
                 event.preventDefault();
                 let domNav = $("#v-line-pills-tab")?.[0];
@@ -275,6 +357,7 @@
                 let dataFrequent3 = setFrequent3(filterDataFrequent2);
                 let countFrequent3 = setCountFrequent3(dataFrequent3, dataTransaksi);
                 let filterDataFrequent3 = filterDataTransaksi(countFrequent3, dataTransaksi.length);
+                let dataRule = setRule(filterDataFrequent3, dataTransaksi);
                 let dataStep = [{
                         id: 1,
                         label: "Data Transaksi",
@@ -329,6 +412,12 @@
                         titte: `Hasil akhir dari Frequent-3`,
                         data: filterDataFrequent3,
                     },
+                    {
+                        id: 10,
+                        label: "Calon Rule Association",
+                        titte: `Rule - rule yang dihasilkan dari hasil frequent`,
+                        data: dataRule,
+                    },
                 ]
 
                 function renderItem(data) {
@@ -362,7 +451,7 @@
                                     </thead>`
                     data.forEach((res, key) => {
                         table = table + "<tr><td>" + (key + 1) + "</td><td>" + ((res.item || res
-                                .pasanganItem)?.split("-")).map(item => renderItem(item))?.join(
+                            .pasanganItem)?.split("-")).map(item => renderItem(item))?.join(
                             "-") + "</td><td>" + res.count + "</td></tr>";
                     })
                     table = table + "</table>";
@@ -386,6 +475,48 @@
                     return table
                 }
 
+                function renderDataKesimpulan(data) {
+                    let table = `Dari hasil frequent-3 maka dapat ditentukan kombinasi dari item-item tersebut beserta dengan support dan confidence nya yaitu:
+                    <table class='table table-bordered'>
+                                    <thead>
+                                        <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Rule</th>
+                                        <th scope="col">Support</th>
+                                        <th scope="col">Confidence</th>
+                                        </tr>
+                                    </thead>`
+                    data.forEach((res, key) => {
+                        let rule = ((res.item || "")?.split("-"));
+                        let rule1 = rule[0] ? rule[0] : "data";
+                        let rule2 = rule[1] ? rule[1] : "data";
+                        table = table + "<tr><td>" + (key + 1) + "</td><td>" + `if buy ${renderItem(rule1)} then buy ${renderItem(rule2)}` + "</td><td>" + `${Number(res.support).toFixed()}%` + "</td><td>" + `${Number(res.confidence).toFixed()}%` + "</td></tr>";
+                    })
+                    let tableKesimpulan = `Rule yang memenuhi kriteria MINIMUM SUPPORT dan MINIMUM CONFIDENCE adalah:
+                    <table class='table table-bordered'>
+                                    <thead>
+                                        <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Rule</th>
+                                        <th scope="col">Support</th>
+                                        <th scope="col">Confidence</th>
+                                        </tr>
+                                    </thead>`;
+                    let inputSupport = $("#support")?.[0]?.value;
+                    let inputConfidence = $("#confidence")?.[0]?.value;
+                    // console.log("INPUT =", inputSupport, inputConfidence)
+                    let dataFilter = data.filter(res => Number(res.support) >= Number(inputSupport) && Number(res.confidence) >= Number(inputConfidence))
+                    dataFilter.forEach((res, key) => {
+                        let rule = ((res.item || "")?.split("-"));
+                        let rule1 = rule[0] ? rule[0] : "data";
+                        let rule2 = rule[1] ? rule[1] : "data";
+                        tableKesimpulan = tableKesimpulan + "<tr><td>" + (key + 1) + "</td><td>" + `if buy ${renderItem(rule1)} then buy ${renderItem(rule2)}` + "</td><td>" + `${Number(res.support).toFixed()}%` + "</td><td>" + `${Number(res.confidence).toFixed()}%` + "</td></tr>";
+                    })
+                    table = `${table} </table>
+                            ${tableKesimpulan} </table>`;
+                    return table
+                }
+
 
                 dataStep.forEach((dom, index) => {
                     let buttonNav = `<a class="nav-link ${index === 0 ? "active" : ""} mb-3" id="v-line-pills-${dom.id}-tab" data-toggle="pill"
@@ -396,7 +527,7 @@
                                     <h4 class="mb-4">${dom.titte}</h4>
                                     <p class="mb-4">
                                         ${
-                                            index === 0 ? renderDataTransaksi(dom.data) : [2,3,5,6,8,9].includes(dom.id) ? renderCount(dom.data) : [4,7].includes(dom.id) ? renderDataFrequent(dom.data) : null
+                                            index === 0 ? renderDataTransaksi(dom.data) : [2,3,5,6,8,9].includes(dom.id) ? renderCount(dom.data) : [4,7].includes(dom.id) ? renderDataFrequent(dom.data) : [10].includes(dom.id) ? renderDataKesimpulan(dom.data) : null
                                         }
                                     </p>
                                 </div>`
@@ -408,8 +539,8 @@
                     $('#modal-loader').hide();
                 }, 2000)
 
-                console.log("dataTransaksi", dataStep)
-                console.log("next =", countFrequent3, filterDataFrequent3)
+                // console.log("dataTransaksi", dataStep)
+                // console.log("next =", countFrequent3, filterDataFrequent3)
             })
 
         })
