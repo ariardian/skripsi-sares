@@ -116,10 +116,10 @@
                         </a>
                         <ul class="collapse submenu list-unstyled" id="more" data-parent="#topAccordion">
                             <li class="{{ $category_name === 'drag_n_drop' ? 'active' : '' }}">
-                                <a href="/drag_and_drop"> Tentang</a>
+                                <a href="/tentang"> Tentang</a>
                             </li>
                             <li class="{{ $category_name === 'widgets' ? 'active' : '' }}">
-                                <a href="/widgets"> Bantuan </a>
+                                <a href="/bantuan"> Bantuan </a>
                             </li>
                         </ul>
                     </li>

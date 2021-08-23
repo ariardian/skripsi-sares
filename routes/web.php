@@ -30,6 +30,24 @@ Route::group(['middleware' => 'auth'], function () {
         // $pageName = 'analytics';
         return view('dashboard2')->with($data);
     });
+    Route::get('/tentang', function () {
+        $data = [
+            'category_name' => 'dashboard',
+            'page_name' => 'tentang',
+            'has_scrollspy' => 0,
+            'scrollspy_offset' => '',
+        ];
+        return view('pages.tentang.index')->with($data);
+    });
+    Route::get('/bantuan', function () {
+        $data = [
+            'category_name' => 'dashboard',
+            'page_name' => 'bantuan',
+            'has_scrollspy' => 0,
+            'scrollspy_offset' => '',
+        ];
+        return view('pages.bantuan.index')->with($data);
+    });
 
     // FILE ENTRY
     Route::resource('file-entry', TransactionController::class);

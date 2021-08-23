@@ -19,7 +19,7 @@
 
 <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 @switch($page_name)
-    @case($page_name == 'file-entry' || $page_name == 'savings_account' || $page_name == 'role')
+    @case($page_name == 'file-entry')
         {{-- Table Datatable HTML5 --}}
         <script src="{{ asset('plugins/table/datatable/datatables.js') }}"></script>
         <script src="{{ asset('plugins/table/datatable/button-ext/dataTables.buttons.min.js') }}"></script>

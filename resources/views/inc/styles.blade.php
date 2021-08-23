@@ -21,7 +21,7 @@
 
 <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 @switch($page_name)
-    @case('file-entry')
+    @case($page_name =='file-entry')
         {{-- Dashboard --}}
         <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ asset('assets/css/dashboard/dash_2.css') }}" rel="stylesheet" type="text/css" />
@@ -30,7 +30,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
     @break
 
-    @case('input-tata-letak')
+    @case($page_name =='input-tata-letak'|| $page_name =='tentang' || $page_name =='bantuan')
         {{-- Components Tabs --}}
         <link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/components/tabs-accordian/custom-tabs.css') }}" rel="stylesheet"
