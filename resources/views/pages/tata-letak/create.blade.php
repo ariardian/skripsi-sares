@@ -14,12 +14,12 @@
                                 <div class="form-row">
                                     <div class="form-group col">
                                         <label for="support">Minimum Support (%)</label>
-                                        <input id="support" type="number" name="support" placeholder="input support..."
+                                        <input id="support" type="text" name="support" placeholder="input support..."
                                             class="form-control" required>
                                     </div>
                                     <div class="form-group col">
                                         <label for="confidence">Minimum Confidence (%)</label>
-                                        <input id="confidence" type="number" name="confidence"
+                                        <input id="confidence" type="text" name="confidence"
                                             placeholder="Input confidence..." class="form-control" required>
                                     </div>
                                 </div>
@@ -341,6 +341,35 @@
                 event.preventDefault();
                 let domNav = $("#v-line-pills-tab")?.[0];
                 let domContent = $("#v-line-pills-tabContent")?.[0];
+                let formSupport = $("#support")?.[0]
+                let formConfidence = $("#confidence")?.[0]
+                formConfidence.classList.remove("is-invalid")
+                const checkValid = (val, label) => {
+                    if(val.value != "" && isNaN(val.value)){
+                            swal( 'Uppsss!', `${label} hanya bisa diisi oleh angka`, 'warning' );
+                            val.classList.add("is-invalid");
+                            return false
+                    }
+                    if(val.value == ""){
+                        swal( 'Uppsss!', `Input minimum ${label} harus diisi`, 'warning' )
+                        val.classList.add("is-invalid")
+                        return false
+                    }
+                    
+                    if(val.value >= 100 || val.value <= 0){
+                        swal( 'Uppsss!', "Range input dari 1 - 100", 'warning' );
+                        val.classList.add("is-invalid");
+                        return false
+                    }
+                    return true
+                }
+                if(formSupport && formConfidence) {
+                    formSupport.classList.remove("is-invalid")
+                    formConfidence.classList.remove("is-invalid")
+                    checkValid(formSupport, "Support")
+                    checkValid(formConfidence, "Confidence")
+                    if(!checkValid(formSupport,"Support") || !checkValid(formConfidence,"Confidence")) return
+                }
                 domNav.innerHTML = "";
                 domContent.innerHTML = "";
                 $('#summary').hide();

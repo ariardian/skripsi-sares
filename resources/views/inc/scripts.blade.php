@@ -14,6 +14,8 @@
     <script src="{{ asset('assets/js/scrollspyNav.js') }}"></script>
     <script src="{{ asset('plugins/highlight/highlight.pack.js') }}"></script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
 @endif
 <!-- END GLOBAL MANDATORY SCRIPTS -->
 
@@ -26,8 +28,8 @@
         <script src="{{ asset('plugins/table/datatable/button-ext/jszip.min.js') }}"></script>
         <script src="{{ asset('plugins/table/datatable/button-ext/buttons.html5.min.js') }}"></script>
         <script src="{{ asset('plugins/table/datatable/button-ext/buttons.print.min.js') }}"></script>
-        <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
-        <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+        {{-- <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+        <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script> --}}
         <script>
             // MODAL ACTION
             $(document).on('click', '.openModalSares', function(event) {
@@ -167,6 +169,7 @@
 
 @switch($page_name)
     @case('file-entry')
+        
         <script>
             $(document).ready(function() {
                 // Action Button

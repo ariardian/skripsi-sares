@@ -23,7 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
         // $category_name = '';
         $data = [
             'category_name' => 'dashboard',
-            'page_name' => 'sales',
+            'page_name' => 'dashboard',
             'has_scrollspy' => 0,
             'scrollspy_offset' => '',
         ];
