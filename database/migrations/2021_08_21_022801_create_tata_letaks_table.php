@@ -15,6 +15,7 @@ class CreateTataLetaksTable extends Migration
     {
         Schema::create('tata_letaks', function (Blueprint $table) {
             $table->id();
+            $table->longText("data");
             $table->timestamps();
         });
     }

@@ -18,18 +18,8 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/home', [TataLetakController::class, 'homeDashboard'])->name('home-dashboard');
 
-    Route::get('/home', function () {
-        // $category_name = '';
-        $data = [
-            'category_name' => 'dashboard',
-            'page_name' => 'dashboard',
-            'has_scrollspy' => 0,
-            'scrollspy_offset' => '',
-        ];
-        // $pageName = 'analytics';
-        return view('dashboard2')->with($data);
-    });
     Route::get('/tentang', function () {
         $data = [
             'category_name' => 'dashboard',

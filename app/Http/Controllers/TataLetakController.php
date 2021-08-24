@@ -27,6 +27,20 @@ class TataLetakController extends Controller
         return view('pages.tata-letak.index', compact('result'))->with($config);
     }
 
+    public function homeDashboard()
+    {
+        $data = [
+            'category_name' => 'dashboard',
+            'page_name' => 'dashboard',
+            'has_scrollspy' => 0,
+            'scrollspy_offset' => '',
+        ];
+
+        $result = TataLetak::latest()->paginate(10);
+        // dump($result);
+        return view('dashboard2', compact('result'))->with($data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

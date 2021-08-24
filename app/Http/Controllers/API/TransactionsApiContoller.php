@@ -38,7 +38,7 @@ class TransactionsApiContoller extends Controller
     }
     public function fileImport(Request $request) 
     {
-        dump($request);
+        // dump($request);
         $array = Excel::toArray(new UsersImport, $request->file('file')->store('temp'));
         $collection = Excel::toCollection(new UsersImport, $request->file('file')->store('temp'));
         // dump($array);

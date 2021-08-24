@@ -3,6 +3,17 @@ body {
 /* .header-page {
     
 } */
+
+/* CSS untuk DENAH */
+
+.jarak {
+    width: 30px;
+}
+.tinggi {
+    height: 30px;
+}
+
+/* END CSS DENAH */
 .vertical-line-pill .nav-pills .nav-link.active, .vertical-line-pill #v-line-pills-tabContent h4 {
     color: #00a1af !important;
     font-weight: bold !important;

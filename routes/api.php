@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\UserApiContoller;
 use App\Http\Controllers\API\TransactionsApiContoller;
+use App\Http\Controllers\API\TataLetakApiContoller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['as' => 'admin.'], function () {
     Route::apiResources([
         'file-entry' => TransactionsApiContoller::class,
+        'tata-letak' => TataLetakApiContoller::class,
     ]);
     Route::post('file-entry/import', [TransactionsApiContoller::class, 'fileImport'])->name('file-entry.import');
 });

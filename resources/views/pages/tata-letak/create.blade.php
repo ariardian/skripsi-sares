@@ -1,6 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
+    @csrf
+    @method('POST')
     <div class="layout-px-spacing">
         <div class="row layout-top-spacing">
             <div class="col-lg-12 col-sm-12 col-12 layout-spacing">
@@ -44,8 +45,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button data-action="{{ route('tata-letak.store') }}"
+                        <div id="areaSave" class="modal-footer">
+                            <button id="btnSaveRekomendasi" data-action="{{ route('admin.tata-letak.store') }}"
                                 class="btn btn-primary buttonSaveRole">Save
                                 Data</button>
                         </div>
@@ -60,6 +61,17 @@
         $(document).ready(function() {
             $('#summary').hide();
             $('#modal-loader').hide();
+            let storeData = {};
+            // console.log(storeData?.dataRule.length)
+            const showHideButtonSave = () => {
+                let buttonSave = $('#areaSave');
+                if (storeData && storeData.dataRule && storeData.dataRule.length) {
+                    buttonSave.show()
+                } else {
+                    buttonSave.hide()
+                }
+            }
+            showHideButtonSave()
 
             // Fungsi Tansaksi barang yang dibeli
             function setDataTransaksi(data) {
@@ -283,7 +295,8 @@
                 })
                 return result;
             }
-            function getSupport(data, dataTransaksi){
+
+            function getSupport(data, dataTransaksi) {
                 let listItem = [...dataTransaksi];
                 let totalTransaksi = dataTransaksi?.length;
                 let valToArray = data.split("-")
@@ -305,13 +318,14 @@
                 let dataCalc = (setCount(num1) / totalTransaksi) * 100;
                 return dataCalc
             }
-            function getConfidence(data, dataTransaksi){
+
+            function getConfidence(data, dataTransaksi) {
                 let listItem = [...dataTransaksi];
                 // let totalTransaksi = dataTransaksi?.length;
                 let splitVar = data.split("-")
                 let num1 = (splitVar?.[0] || 0);
                 let num2 = (splitVar?.[1] || 0);
-                
+
                 const setCountCombination = (val) => {
                     let isFind = [false, false];
                     let isCount = 0;
@@ -337,6 +351,52 @@
                 return dataCalc
             }
 
+            function setRekomendasi(data) {
+                let inpSup = $("#support")?.[0].value
+                let inpCon = $("#confidence")?.[0].value
+                let dataFilter = data.length && data.filter(res => Number(res.support) >= Number(inpSup) && Number(
+                    res.confidence) >= Number(inpCon))
+                return dataFilter;
+            }
+
+
+            // SAVE REKOMENDAI KE DATABASE
+            $(document).on('click', '#btnSaveRekomendasi', function(event) {
+                event.preventDefault();
+                let tmpStoreData = {
+                    ...storeData
+                }
+                let dataUrl = $(this).attr('data-action');
+                console.log(tmpStoreData.dataRule)
+                let dataFrom = tmpStoreData.rekomendasi ? tmpStoreData.rekomendasi : []
+                $.ajax({
+                    data: JSON.stringify(dataFrom),
+                    url: dataUrl,
+                    type: "POST",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function(data) {
+                        // console.log("Here", data)
+                        if (data.code == 200) {
+                            swal(
+                                'Success!',
+                                data.success,
+                                'success'
+                            )
+                        }
+                    },
+                    error: function(data) {
+                        swal(
+                            'Error!',
+                            (data?.success || "Gagal menyimpan data"),
+                            'error'
+                        )
+                    }
+                });
+
+            })
+
+            // button proses
             $(document).on('click', '#buttonProc', function(event) {
                 event.preventDefault();
                 let domNav = $("#v-line-pills-tab")?.[0];
@@ -345,30 +405,31 @@
                 let formConfidence = $("#confidence")?.[0]
                 formConfidence.classList.remove("is-invalid")
                 const checkValid = (val, label) => {
-                    if(val.value != "" && isNaN(val.value)){
-                            swal( 'Uppsss!', `${label} hanya bisa diisi oleh angka`, 'warning' );
-                            val.classList.add("is-invalid");
-                            return false
+                    if (val.value != "" && isNaN(val.value)) {
+                        swal('Uppsss!', `${label} hanya bisa diisi oleh angka`, 'warning');
+                        val.classList.add("is-invalid");
+                        return false
                     }
-                    if(val.value == ""){
-                        swal( 'Uppsss!', `Input minimum ${label} harus diisi`, 'warning' )
+                    if (val.value == "") {
+                        swal('Uppsss!', `Input minimum ${label} harus diisi`, 'warning')
                         val.classList.add("is-invalid")
                         return false
                     }
-                    
-                    if(val.value >= 100 || val.value <= 0){
-                        swal( 'Uppsss!', "Range input dari 1 - 100", 'warning' );
+
+                    if (val.value >= 100 || val.value <= 0) {
+                        swal('Uppsss!', "Range input dari 1 - 100", 'warning');
                         val.classList.add("is-invalid");
                         return false
                     }
                     return true
                 }
-                if(formSupport && formConfidence) {
+                if (formSupport && formConfidence) {
                     formSupport.classList.remove("is-invalid")
                     formConfidence.classList.remove("is-invalid")
                     checkValid(formSupport, "Support")
                     checkValid(formConfidence, "Confidence")
-                    if(!checkValid(formSupport,"Support") || !checkValid(formConfidence,"Confidence")) return
+                    if (!checkValid(formSupport, "Support") || !checkValid(formConfidence, "Confidence"))
+                        return
                 }
                 domNav.innerHTML = "";
                 domContent.innerHTML = "";
@@ -387,6 +448,22 @@
                 let countFrequent3 = setCountFrequent3(dataFrequent3, dataTransaksi);
                 let filterDataFrequent3 = filterDataTransaksi(countFrequent3, dataTransaksi.length);
                 let dataRule = setRule(filterDataFrequent3, dataTransaksi);
+                let rekomendasi = setRekomendasi(dataRule);
+
+                storeData = {
+                    resultdataTransaction,
+                    dataTransaksi,
+                    dataTransaksiPerItem,
+                    filterDataTransaksiPerItem,
+                    dataFrequent2,
+                    countFrequent2,
+                    filterDataFrequent2,
+                    dataFrequent3,
+                    countFrequent3,
+                    filterDataFrequent3,
+                    dataRule,
+                    rekomendasi,
+                }
                 let dataStep = [{
                         id: 1,
                         label: "Data Transaksi",
@@ -443,11 +520,18 @@
                     },
                     {
                         id: 10,
-                        label: "Calon Rule Association",
+                        label: "Rule Association",
                         titte: `Rule - rule yang dihasilkan dari hasil frequent`,
                         data: dataRule,
                     },
+                    {
+                        id: 11,
+                        label: "Kesimpulan",
+                        titte: `Data yang memenuhi support dan confidence`,
+                        data: rekomendasi,
+                    },
                 ]
+                console.log(dataStep, dataRule)
 
                 function renderItem(data) {
                     return `<span class="badge outline-badge-success"> ${data} </span>`
@@ -505,7 +589,7 @@
                 }
 
                 function renderDataKesimpulan(data) {
-                    let table = `Dari hasil frequent-3 maka dapat ditentukan kombinasi dari item-item tersebut beserta dengan support dan confidence nya yaitu:
+                    let table = `Hasil rule beserta support dan confidence nya yaitu:
                     <table class='table table-bordered'>
                                     <thead>
                                         <tr>
@@ -519,30 +603,13 @@
                         let rule = ((res.item || "")?.split("-"));
                         let rule1 = rule[0] ? rule[0] : "data";
                         let rule2 = rule[1] ? rule[1] : "data";
-                        table = table + "<tr><td>" + (key + 1) + "</td><td>" + `if buy ${renderItem(rule1)} then buy ${renderItem(rule2)}` + "</td><td>" + `${Number(res.support).toFixed()}%` + "</td><td>" + `${Number(res.confidence).toFixed()}%` + "</td></tr>";
+                        table = table + "<tr><td>" + (key + 1) + "</td><td>" +
+                            `if buy ${renderItem(rule1)} then buy ${renderItem(rule2)}` +
+                            "</td><td>" + `${Number(res.support).toFixed()}%` + "</td><td>" +
+                            `${Number(res.confidence).toFixed()}%` + "</td></tr>";
                     })
-                    let tableKesimpulan = `Rule yang memenuhi kriteria MINIMUM SUPPORT dan MINIMUM CONFIDENCE adalah:
-                    <table class='table table-bordered'>
-                                    <thead>
-                                        <tr>
-                                        <th scope="col">No</th>
-                                        <th scope="col">Rule</th>
-                                        <th scope="col">Support</th>
-                                        <th scope="col">Confidence</th>
-                                        </tr>
-                                    </thead>`;
-                    let inputSupport = $("#support")?.[0]?.value;
-                    let inputConfidence = $("#confidence")?.[0]?.value;
-                    // console.log("INPUT =", inputSupport, inputConfidence)
-                    let dataFilter = data.filter(res => Number(res.support) >= Number(inputSupport) && Number(res.confidence) >= Number(inputConfidence))
-                    dataFilter.forEach((res, key) => {
-                        let rule = ((res.item || "")?.split("-"));
-                        let rule1 = rule[0] ? rule[0] : "data";
-                        let rule2 = rule[1] ? rule[1] : "data";
-                        tableKesimpulan = tableKesimpulan + "<tr><td>" + (key + 1) + "</td><td>" + `if buy ${renderItem(rule1)} then buy ${renderItem(rule2)}` + "</td><td>" + `${Number(res.support).toFixed()}%` + "</td><td>" + `${Number(res.confidence).toFixed()}%` + "</td></tr>";
-                    })
-                    table = `${table} </table>
-                            ${tableKesimpulan} </table>`;
+
+                    table = `${table} </table>`;
                     return table
                 }
 
@@ -556,7 +623,7 @@
                                     <h4 class="mb-4">${dom.titte}</h4>
                                     <p class="mb-4">
                                         ${
-                                            index === 0 ? renderDataTransaksi(dom.data) : [2,3,5,6,8,9].includes(dom.id) ? renderCount(dom.data) : [4,7].includes(dom.id) ? renderDataFrequent(dom.data) : [10].includes(dom.id) ? renderDataKesimpulan(dom.data) : null
+                                            index === 0 ? renderDataTransaksi(dom.data) : [2,3,5,6,8,9].includes(dom.id) ? renderCount(dom.data) : [4,7].includes(dom.id) ? renderDataFrequent(dom.data) : [10, 11].includes(dom.id) ? renderDataKesimpulan(dom.data) : null
                                         }
                                     </p>
                                 </div>`
@@ -564,6 +631,7 @@
                     domContent?.insertAdjacentHTML('beforeend', detail);
                 })
                 setTimeout((e) => {
+                    showHideButtonSave()
                     $('#summary').show();
                     $('#modal-loader').hide();
                 }, 2000)
