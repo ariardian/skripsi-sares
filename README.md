@@ -1,6 +1,6 @@
 ## Cara Instalasi
 
-1. `cd koperasi`
+1. `cd skripsi-sares`
 2. `composer install`
 3. `composer require laravel/ui`
 
